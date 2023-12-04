@@ -11,12 +11,11 @@ std::vector<std::string> splitByDelimiter(std::string stringToSplit,
   int currentDelimiterPosition = 0;
   int nextDelimiterPosition = 0;
 
-
   while ((nextDelimiterPosition = stringToSplit.find(
               delimiter, currentDelimiterPosition)) != std::string::npos) {
     if (stringToSplit[currentDelimiterPosition] == delimiter) {
-        currentDelimiterPosition += 1;
-        continue;
+      currentDelimiterPosition += 1;
+      continue;
     }
     std::string token =
         stringToSplit.substr(currentDelimiterPosition,
@@ -44,7 +43,6 @@ int getNumberOfMatches(std::vector<int> playedNumbers,
   for (int n : playedNumbers) {
     if (std::find(winningNumbers.begin(), winningNumbers.end(), n) !=
         winningNumbers.end()) {
-      std::cout << "Found a match for " << n << std::endl;
       numberOfMatches++;
     }
   }
@@ -55,7 +53,8 @@ int main() {
   std::ifstream inputFile;
   inputFile.open("input.txt");
   std::string line;
-  std::vector<size_t> numbers;
+  std::vector<size_t> matches;
+  std::vector<size_t> cardCopies;
   int totalPoints = 0;
 
   if (inputFile.is_open()) {
@@ -74,14 +73,32 @@ int main() {
         int numberOfMatchesForCard =
             getNumberOfMatches(playedNumbers, winningNumbers);
         int cardPoints = 0;
+        matches.push_back(numberOfMatchesForCard);
+        cardCopies.push_back(1);
         if (numberOfMatchesForCard > 0) {
           cardPoints = pow(2, numberOfMatchesForCard - 1);
         }
-        std::cout << cardPoints << std::endl;
         totalPoints += cardPoints;
       }
     }
+
+    for (int i = 0; i < matches.size(); i++) {
+      int numberOfMatchesForCard = matches.at(i);
+      int numberOfCopiesOfCard = cardCopies.at(i);
+      for (int j = 1; j <= numberOfMatchesForCard && (i + j) < matches.size();
+           j++) {
+        int numberOfCopiesOfCardJ = cardCopies[i + j];
+        cardCopies[i + j] = numberOfCopiesOfCardJ + numberOfCopiesOfCard;
+      }
+    }
+
+    int numberOfCards = 0;
+    for (int copies : cardCopies) {
+      numberOfCards += copies;
+    }
+
     std::cout << totalPoints << std::endl;
+    std::cout << numberOfCards << std::endl;
   }
 
   return 0;
