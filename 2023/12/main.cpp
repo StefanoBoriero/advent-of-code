@@ -128,27 +128,22 @@ int main() {
         auto constraint = parseStringOfNumbers(tmp[1]);
         std::vector<long> constraints = constraint;
         std::string unfolded = tmp[0];
-        for (int i{0}; i < 0; i++) {
+        for (int i{0}; i < 5; i++) {
           for (auto x : constraint) {
             constraints.push_back(x);
           }
           unfolded = unfolded + '?';
           unfolded = unfolded + tmp[0];
         }
-        size_t originalNumberOfPossibleConfigs =
-            calculateNumberOfCombinations(tmp[0], constraint);
+        //size_t originalNumberOfPossibleConfigs =
+        //    calculateNumberOfCombinations(tmp[0], constraint);
         size_t numberOfPossibleConfigs =
             calculateNumberOfCombinations(unfolded, constraints);
-        double rateOfGrowth =
-            numberOfPossibleConfigs / (double)originalNumberOfPossibleConfigs;
-        result += originalNumberOfPossibleConfigs * std::pow(rateOfGrowth, 4); // this actually works only for the test input
-        if (numberOfPossibleConfigs % originalNumberOfPossibleConfigs != 0) {
-          std::cout << "Growing from " << originalNumberOfPossibleConfigs
-                    << " to " << numberOfPossibleConfigs << " at a rate of "
-                    << rateOfGrowth << std::endl;
-          std::cout << i << std::endl;
-        }
+        result += numberOfPossibleConfigs;// * std::pow(rateOfGrowth, 4); // this actually works only for the test input
         i++;
+        if (i%100 == 0) {
+            std::cout << "Done " << i/100 << "%" << std::endl;
+        }
       }
     }
 
